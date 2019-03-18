@@ -3,7 +3,7 @@ A simple Application to cluster and visualize images using the k-Means-Clusterin
 
 **REQUIREMENTS**
 - PyQt5
-- Python 3.x
+- Python 2.7.11 / 3.x
 - OpenCV for Python
 
 **BUILD**
