@@ -24,9 +24,6 @@ class Ui_MainWindow(object):
         MainWindow.resize(1073, 707)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
-        #self.graphicsView = QtWidgets.QGraphicsView(self.centralwidget)
-        #self.graphicsView.setGeometry(QtCore.QRect(120, 140, 256, 192))
-        #self.graphicsView.setObjectName("graphicsView")
         self.picLabel = QtWidgets.QLabel(self.centralwidget)
         self.picLabel.setGeometry(QtCore.QRect(170, 460, 47, 13))
         self.picLabel.setObjectName("picLabel")
@@ -126,7 +123,6 @@ class Ui_MainWindow(object):
         Z = img.reshape((-1,3))
         Z = np.float32(Z)
         criteria = (criteria_check, maxIter, accuracy)
-        #K = 8
         ret,label,center=cv2.kmeans(Z,k,None,criteria,attempts,cv2.KMEANS_RANDOM_CENTERS)
         center = np.uint8(center)
         res = center[label.flatten()]
@@ -161,34 +157,8 @@ class Ui_MainWindow(object):
         self.label_2.setText(_translate("MainWindow", "ATTEMPTS"))
         self.label.setText(_translate("MainWindow", "k"))
         self.pushButton_2.setText(_translate("MainWindow", "UPDATE"))
-        
-        
+    
 
-        
-        
-#class viewImage(Ui_MainWindow):
-#    def __init__(self):
-#        super().__init__()
-#        pixmap = QPixmap('arc.JPG')
-#        picLabel=Ui_MainWindow.picLabel(self)
-#        picLabel.setPixmap(pixmap)
-#        self.show()
-#   	
-	#@pyqtSlot( )
-    # def function(self):
-	    # image_path = r'C:\Users\User\Desktop\Fotos Trip\arc.JPG'
-	    # self.show_frame_in_display(image_path)
-		
-    # def show_frame_in_display(self, image_path):
-	    # frame = QtGui.QWidget()
-	    # picLabel = QtGui.QImage(image_path)
-	    # image_profile = image_profile.scaled(250,250, aspectRatioMode=QtCore.Qt.KeepAspectRatio, transformMode=QtCore.Qt.SmoothTransformation)
-	    # picLabel.setPixmap(QtGui.QtPixmap.fromImage(image_profile))
-    # def loadImage(self):
-        # image_path = r'C:\Users\User\Desktop\Fotos Trip\arc.JPG'
-        # pixmap = QPixmap(image_path)
-        # picLabel.setPixmap(pixmap)
-        # self.show()
         
 if __name__ == "__main__":
     app = QtWidgets.QApplication(sys.argv)
