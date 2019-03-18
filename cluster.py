@@ -120,6 +120,8 @@ class Ui_MainWindow(object):
             criteria_check = criteria_max_iter
         elif self.checkBox.isChecked() == False & self.checkBox_2.isChecked():
             criteria_check = criteria_eps
+        elif self.checkBox.isChecked() == False & self.checkBox_2.isChecked() == False:
+            criteria_check = cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER #default case
         Z = img.reshape((-1,3))
         Z = np.float32(Z)
         criteria = (criteria_check, maxIter, accuracy)
