@@ -10,13 +10,18 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtWidgets import QLabel, QMainWindow, QApplication, QWidget, QGraphicsScene
 from PyQt5.QtGui import QPixmap
 import sys
+import os
 import numpy as np
 import cv2
 
 img = cv2.imread('arc.JPG')
 img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+height, width, channels = img.shape
 pyImg = QtGui.QImage(img, img.shape[1],\
                             img.shape[0], img.shape[1] * 3,QtGui.QImage.Format_RGB888)
+save_location = '/home/justus/Desktop/cluster_gui'
+resolution = np.zeros((height, width, 3), np.uint8)
+
         
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
@@ -26,6 +31,7 @@ class Ui_MainWindow(object):
         self.centralwidget.setObjectName("centralwidget")
         self.picLabel = QtWidgets.QLabel(self.centralwidget)
         self.picLabel.setGeometry(QtCore.QRect(170, 460, 47, 13))
+        self.picLabel.move(10,10)
         self.picLabel.setObjectName("picLabel")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
@@ -38,9 +44,10 @@ class Ui_MainWindow(object):
         self.dockWidget = QtWidgets.QDockWidget(MainWindow)
         self.dockWidget.setObjectName("dockWidget")
         self.dockWidgetContents = QtWidgets.QWidget()
+        #self.dockWidget.setGeometry(QtCore.QRect(1,1,10,10))
         self.dockWidgetContents.setObjectName("dockWidgetContents")
         self.verticalLayoutWidget = QtWidgets.QWidget(self.dockWidgetContents)
-        self.verticalLayoutWidget.setGeometry(QtCore.QRect(-1, -1, 81, 641))
+        self.verticalLayoutWidget.setGeometry(QtCore.QRect(1, 1, 100, 641))
         self.verticalLayoutWidget.setObjectName("verticalLayoutWidget")
         self.verticalLayout = QtWidgets.QVBoxLayout(self.verticalLayoutWidget)
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
@@ -87,14 +94,22 @@ class Ui_MainWindow(object):
         self.pushButton_3 = QtWidgets.QPushButton(self.verticalLayoutWidget)
         self.pushButton_3.setObjectName("pushButton_3")
         self.verticalLayout.addWidget(self.pushButton_3)
+        self.pushButton_4 = QtWidgets.QPushButton(self.verticalLayoutWidget)
+        self.pushButton_4.setObjectName("pushButton_4")
+        self.verticalLayout.addWidget(self.pushButton_4)
         self.dockWidget.setWidget(self.dockWidgetContents)
         MainWindow.addDockWidget(QtCore.Qt.DockWidgetArea(1), self.dockWidget)
+        
+        file_menu = self.menubar.addMenu('File')
+        open_file = file_menu.addMenu('&Open')
+        exit_menu = self.menubar.addMenu('Info')
         self.retranslateUi(MainWindow)
+        
         #self.pushButton_2.clicked.connect(self.picLabel.clear)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
         
         pixmapp=QPixmap(pyImg)
-        self.picLabel.move(0,0)
+        #self.picLabel.move(0,0)
         self.picLabel.resize(MainWindow.width(), MainWindow.height())
         self.picLabel.setPixmap(pixmapp.scaled(MainWindow.width(),MainWindow.height()))
         
@@ -102,6 +117,7 @@ class Ui_MainWindow(object):
         self.spinBox.valueChanged.connect(self.valueChanged_k)
         self.spinBox_3.valueChanged.connect(self.valueChanged_attempts)
         self.pushButton_3.clicked.connect(self.reset)
+        self.pushButton_4.clicked.connect(self.save_current)
         #k=self.spinBox.value()
         #attempts=self.spinBox_3.value()
     def valueChanged_attempts(self):
@@ -133,14 +149,25 @@ class Ui_MainWindow(object):
         center = np.uint8(center)
         res = center[label.flatten()]
         res2 = res.reshape((img.shape))
+        res_width = res2.shape[0]
+        res_heigth = res2.shape[1]
+        for i in range(res_width):
+            for j in range(res_heigth):
+                resolution[i][j] = res2[i][j]
         res2=QtGui.QImage(res2, res2.shape[1],\
                             res2.shape[0], res2.shape[1] * 3,QtGui.QImage.Format_RGB888)
         pixmap=QPixmap(res2)
         self.picLabel.setPixmap(pixmap.scaled(MainWindow.width(),MainWindow.height()))
-        
+        return resolution
     def reset(self):
         pixmap=QPixmap(pyImg)
         self.picLabel.setPixmap(pixmap.scaled(MainWindow.width(),MainWindow.height()))
+        
+    def save_current(self):
+        resolution_img = cv2.cvtColor(resolution, cv2.COLOR_BGR2RGB)
+        #cv2.imwrite(os.save_location.join(save_location, 'test.jpg'), res)
+        cv2.imwrite(str(self.spinBox.value()) + '_' + str(self.spinBox_3.value()) + '_MAX_ITER_' + str(self.spinBox_2.value()) + '_ACC_' + str(self.doubleSpinBox.value()) + '.jpg', resolution_img)
+        print("Hallo")
     def show_img(self, pyImg):
         pixmapp=QPixmap(img)
         self.picLabel.move(0,0)
@@ -168,6 +195,7 @@ class Ui_MainWindow(object):
         self.label.setText(_translate("MainWindow", "k"))
         self.pushButton_2.setText(_translate("MainWindow", "UPDATE"))
         self.pushButton_3.setText(_translate("MainWindow", "RESET"))
+        self.pushButton_4.setText(_translate("MainWindow", "SAVE"))
 
         
 if __name__ == "__main__":
