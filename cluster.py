@@ -7,14 +7,14 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtWidgets import QLabel, QMainWindow, QApplication, QWidget, QGraphicsScene
+#from PyQt5.QtWidgets import QLabel, QMainWindow, QApplication, QWidget, QGraphicsScene
 from PyQt5.QtGui import QPixmap
 import sys
 import os
 import numpy as np
 import cv2
 
-img = cv2.imread('arc.JPG')
+img = cv2.imread('figure_1.png')
 img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 height, width, channels = img.shape
 pyImg = QtGui.QImage(img, img.shape[1],\
@@ -31,7 +31,7 @@ class Ui_MainWindow(object):
         self.centralwidget.setObjectName("centralwidget")
         self.picLabel = QtWidgets.QLabel(self.centralwidget)
         self.picLabel.setGeometry(QtCore.QRect(170, 460, 47, 13))
-        self.picLabel.move(10,10)
+        self.picLabel.move(200,50)
         self.picLabel.setObjectName("picLabel")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
@@ -44,8 +44,22 @@ class Ui_MainWindow(object):
         self.dockWidget = QtWidgets.QDockWidget(MainWindow)
         self.dockWidget.setObjectName("dockWidget")
         self.dockWidgetContents = QtWidgets.QWidget()
-        #self.dockWidget.setGeometry(QtCore.QRect(1,1,10,10))
+        #self.dockWidgetContents.setGeometry(QtCore.QRect(200,10,200,641))
+        #self.dockWidget.setGeometry(QtCore.QRect(200,10,200,641))
         self.dockWidgetContents.setObjectName("dockWidgetContents")
+        self.dockWidget_2 = QtWidgets.QDockWidget(MainWindow)
+        self.dockWidget_2.setObjectName("dockWidget_2")
+        self.dockWidget.setAllowedAreas(QtCore.Qt.RightDockWidgetArea)#|QtCore.Qt.RightDockWidgetArea)
+        #self.dockWidget_2.setGeometry(1,1,200,641)
+        self.dockWidget2Contents = QtWidgets.QWidget()
+        self.dockWidget2Contents.setObjectName("dockWidget2Contents")
+        self.treeView = QtWidgets.QTreeView(self.dockWidget2Contents)
+        self.treeView.setObjectName("treeView")
+        self.dockWidget_2.setWidget(self.treeView)
+        self.fileModel = QtWidgets.QFileSystemModel()
+        self.fileModel.setRootPath('C:\\')
+        self.treeView.setModel(self.fileModel)
+        self.treeView.setWindowTitle("Choose file")
         self.verticalLayoutWidget = QtWidgets.QWidget(self.dockWidgetContents)
         self.verticalLayoutWidget.setGeometry(QtCore.QRect(1, 1, 100, 641))
         self.verticalLayoutWidget.setObjectName("verticalLayoutWidget")
@@ -99,12 +113,13 @@ class Ui_MainWindow(object):
         self.verticalLayout.addWidget(self.pushButton_4)
         self.dockWidget.setWidget(self.dockWidgetContents)
         MainWindow.addDockWidget(QtCore.Qt.DockWidgetArea(1), self.dockWidget)
-        
+        MainWindow.addDockWidget(QtCore.Qt.DockWidgetArea(2), self.dockWidget_2)
         file_menu = self.menubar.addMenu('File')
         open_file = file_menu.addMenu('&Open')
         exit_menu = self.menubar.addMenu('Info')
-        self.retranslateUi(MainWindow)
         
+        self.retranslateUi(MainWindow)
+         
         #self.pushButton_2.clicked.connect(self.picLabel.clear)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
         
@@ -157,11 +172,11 @@ class Ui_MainWindow(object):
         res2=QtGui.QImage(res2, res2.shape[1],\
                             res2.shape[0], res2.shape[1] * 3,QtGui.QImage.Format_RGB888)
         pixmap=QPixmap(res2)
-        self.picLabel.setPixmap(pixmap.scaled(MainWindow.width(),MainWindow.height()))
+        self.picLabel.setPixmap(pixmap.scaled(self.picLabel.width(),self.picLabel.height()))
         return resolution
     def reset(self):
         pixmap=QPixmap(pyImg)
-        self.picLabel.setPixmap(pixmap.scaled(MainWindow.width(),MainWindow.height()))
+        self.picLabel.setPixmap(pixmap.scaled(self.picLabel.width(),self.picLabel.height()))
         
     def save_current(self):
         resolution_img = cv2.cvtColor(resolution, cv2.COLOR_BGR2RGB)
@@ -203,6 +218,6 @@ if __name__ == "__main__":
     MainWindow = QtWidgets.QMainWindow()
     ui = Ui_MainWindow()
     ui.setupUi(MainWindow)
-    MainWindow.show()
+    MainWindow.showMaximized()
     sys.exit(app.exec_())
 
