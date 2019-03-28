@@ -55,6 +55,8 @@ class Ui_MainWindow(object):
         self.dockWidget2Contents.setObjectName("dockWidget2Contents")
         self.treeView = QtWidgets.QTreeView(self.dockWidget2Contents)
         self.treeView.setObjectName("treeView")
+#        self.pushButton_5 = QtWidgets.QPushButton(self.dockWidget_2)
+#        self.pushButton_5.setObjectName("pushButton_5")
         self.dockWidget_2.setWidget(self.treeView)
         self.fileModel = QtWidgets.QFileSystemModel()
         self.fileModel.setRootPath('C:\\')
@@ -133,8 +135,15 @@ class Ui_MainWindow(object):
         self.spinBox_3.valueChanged.connect(self.valueChanged_attempts)
         self.pushButton_3.clicked.connect(self.reset)
         self.pushButton_4.clicked.connect(self.save_current)
+        self.treeView.doubleClicked.connect(self.onClicked)
         #k=self.spinBox.value()
         #attempts=self.spinBox_3.value()
+    def onClicked(self, index):
+        path = self.fileModel.filePath(index)
+        name = self.fileModel.fileName(index)
+        #print(path)
+        print(name)
+        return path
     def valueChanged_attempts(self):
         attempts = self.spinBox_3.value()
         return attempts
