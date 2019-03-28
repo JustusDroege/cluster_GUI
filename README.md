@@ -8,3 +8,5 @@ A simple Application to cluster and visualize images using the k-Means-Clusterin
 
 **BUILD**
 - Simply compile via console
+
+**Update 28.03.2019**: You can now upload images via filebrowser using "UPLOAD" button. However, you cannot cluster or save afterwards. Will be fixed in near future.
