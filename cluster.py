@@ -10,15 +10,15 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 #from PyQt5.QtWidgets import QLabel, QMainWindow, QApplication, QWidget, QGraphicsScene
 from PyQt5.QtGui import QPixmap
 import sys
-import os
 import numpy as np
 import cv2
 
-img = cv2.imread('figure_1.png')
-img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-height, width, channels = img.shape
-pyImg = QtGui.QImage(img, img.shape[1],\
-                            img.shape[0], img.shape[1] * 3,QtGui.QImage.Format_RGB888)
+path = "jj"
+imgx = cv2.imread('python.jpg')
+imgx = cv2.cvtColor(imgx, cv2.COLOR_BGR2RGB)
+height, width, channels = imgx.shape
+pyImg = QtGui.QImage(imgx, imgx.shape[1],\
+                           imgx.shape[0], imgx.shape[1] * 3,QtGui.QImage.Format_RGB888)
 save_location = '/home/justus/Desktop/cluster_gui'
 resolution = np.zeros((height, width, 3), np.uint8)
 
@@ -33,6 +33,7 @@ class Ui_MainWindow(object):
         self.picLabel.setGeometry(QtCore.QRect(170, 460, 47, 13))
         self.picLabel.move(200,50)
         self.picLabel.setObjectName("picLabel")
+        self.picLabel.setText("Cluster_GUI")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 1073, 21))
@@ -55,11 +56,9 @@ class Ui_MainWindow(object):
         self.dockWidget2Contents.setObjectName("dockWidget2Contents")
         self.treeView = QtWidgets.QTreeView(self.dockWidget2Contents)
         self.treeView.setObjectName("treeView")
-#        self.pushButton_5 = QtWidgets.QPushButton(self.dockWidget_2)
-#        self.pushButton_5.setObjectName("pushButton_5")
         self.dockWidget_2.setWidget(self.treeView)
         self.fileModel = QtWidgets.QFileSystemModel()
-        self.fileModel.setRootPath('C:\\')
+        self.fileModel.setRootPath('/home/justus')
         self.treeView.setModel(self.fileModel)
         self.treeView.setWindowTitle("Choose file")
         self.verticalLayoutWidget = QtWidgets.QWidget(self.dockWidgetContents)
@@ -113,6 +112,9 @@ class Ui_MainWindow(object):
         self.pushButton_4 = QtWidgets.QPushButton(self.verticalLayoutWidget)
         self.pushButton_4.setObjectName("pushButton_4")
         self.verticalLayout.addWidget(self.pushButton_4)
+        self.pushButton_5 = QtWidgets.QPushButton(self.verticalLayoutWidget)
+        self.pushButton_5.setObjectName("pushButton_5")
+        self.verticalLayout.addWidget(self.pushButton_5)
         self.dockWidget.setWidget(self.dockWidgetContents)
         MainWindow.addDockWidget(QtCore.Qt.DockWidgetArea(1), self.dockWidget)
         MainWindow.addDockWidget(QtCore.Qt.DockWidgetArea(2), self.dockWidget_2)
@@ -125,25 +127,47 @@ class Ui_MainWindow(object):
         #self.pushButton_2.clicked.connect(self.picLabel.clear)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
         
-        pixmapp=QPixmap(pyImg)
+        #pixmapp=QPixmap(pyImg)
         #self.picLabel.move(0,0)
         self.picLabel.resize(MainWindow.width(), MainWindow.height())
-        self.picLabel.setPixmap(pixmapp.scaled(MainWindow.width(),MainWindow.height()))
+        #self.picLabel.setPixmap(pixmapp.scaled(MainWindow.width(),MainWindow.height()))
         
         self.pushButton_2.clicked.connect(self.cluster_img)
         self.spinBox.valueChanged.connect(self.valueChanged_k)
         self.spinBox_3.valueChanged.connect(self.valueChanged_attempts)
         self.pushButton_3.clicked.connect(self.reset)
         self.pushButton_4.clicked.connect(self.save_current)
-        self.treeView.doubleClicked.connect(self.onClicked)
+        self.pushButton_5.clicked.connect(self.upload)
+        self.treeView.clicked.connect(self.onClicked)
         #k=self.spinBox.value()
         #attempts=self.spinBox_3.value()
+        ####SET DEFAULT IMAGE
+        global pyImg
+        pixmap = QPixmap(pyImg)
+        self.picLabel.setPixmap(pixmap.scaled(MainWindow.width(),MainWindow.height()))
+    def upload(self):
+        try:
+            print(path)
+            imgx = cv2.imread(path)
+            imgx = cv2.cvtColor(imgx, cv2.COLOR_BGR2RGB)
+            print(imgx.shape)
+            global pyImg
+            pyImg = QtGui.QImage(imgx, imgx.shape[1],\
+                            imgx.shape[0], imgx.shape[1] * 3,QtGui.QImage.Format_RGB888)
+            pixmap = QPixmap(pyImg)
+            global imgx
+            imgx = imgx
+            #self.picLabel.resize(MainWindow.width(), MainWindow.height())
+            self.picLabel.setPixmap(pixmap.scaled(MainWindow.width(),MainWindow.height()))
+        except:
+            print("Not an image")
     def onClicked(self, index):
-        path = self.fileModel.filePath(index)
+        global path
+        path = self.fileModel.filePath(index) 
         name = self.fileModel.fileName(index)
         #print(path)
-        print(name)
-        return path
+        #print(name)
+        #return path
     def valueChanged_attempts(self):
         attempts = self.spinBox_3.value()
         return attempts
@@ -166,13 +190,13 @@ class Ui_MainWindow(object):
             criteria_check = criteria_eps
         elif self.checkBox.isChecked() == False & self.checkBox_2.isChecked() == False:
             criteria_check = cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER #default case
-        Z = img.reshape((-1,3))
+        Z = imgx.reshape((-1,3))
         Z = np.float32(Z)
         criteria = (criteria_check, maxIter, accuracy)
         ret,label,center=cv2.kmeans(Z,k,None,criteria,attempts,cv2.KMEANS_RANDOM_CENTERS)
         center = np.uint8(center)
         res = center[label.flatten()]
-        res2 = res.reshape((img.shape))
+        res2 = res.reshape((imgx.shape))
         res_width = res2.shape[0]
         res_heigth = res2.shape[1]
         for i in range(res_width):
@@ -182,32 +206,13 @@ class Ui_MainWindow(object):
                             res2.shape[0], res2.shape[1] * 3,QtGui.QImage.Format_RGB888)
         pixmap=QPixmap(res2)
         self.picLabel.setPixmap(pixmap.scaled(self.picLabel.width(),self.picLabel.height()))
-        return resolution
     def reset(self):
         pixmap=QPixmap(pyImg)
         self.picLabel.setPixmap(pixmap.scaled(self.picLabel.width(),self.picLabel.height()))
         
     def save_current(self):
         resolution_img = cv2.cvtColor(resolution, cv2.COLOR_BGR2RGB)
-        #cv2.imwrite(os.save_location.join(save_location, 'test.jpg'), res)
-        cv2.imwrite(str(self.spinBox.value()) + '_' + str(self.spinBox_3.value()) + '_MAX_ITER_' + str(self.spinBox_2.value()) + '_ACC_' + str(self.doubleSpinBox.value()) + '.jpg', resolution_img)
-        print("Hallo")
-    def show_img(self, pyImg):
-        pixmapp=QPixmap(img)
-        self.picLabel.move(0,0)
-        self.picLabel.resize(MainWindow.width(), MainWindow.height())
-        self.picLabel.setPixmap(pixmapp.scaled(MainWindow.width(),MainWindow.height()))
-        
-    def update(self):
-        if self.checkBox.isChecked() == True:
-            print("Hallo")
-        if self.spinBox_2.value() == 2:
-            print("2")
-        k = self.spinBox.value()
-        attempts = self.spinBox_3.value()
-        return k, attempts
-    
-    
+        cv2.imwrite(str(self.spinBox.value()) + '_' + str(self.spinBox_3.value()) + '_MAX_ITER_' + str(self.spinBox_2.value()) + '_ACC_' + str(self.doubleSpinBox.value()) + '.jpg', resolution_img) 
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -220,6 +225,7 @@ class Ui_MainWindow(object):
         self.pushButton_2.setText(_translate("MainWindow", "UPDATE"))
         self.pushButton_3.setText(_translate("MainWindow", "RESET"))
         self.pushButton_4.setText(_translate("MainWindow", "SAVE"))
+        self.pushButton_5.setText(_translate("MainWindow", "UPLOAD"))
 
         
 if __name__ == "__main__":
