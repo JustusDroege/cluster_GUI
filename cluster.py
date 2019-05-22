@@ -1,13 +1,5 @@
-# -*- coding: utf-8 -*-
-
-# Form implementation generated from reading ui file 'cluster.ui'
-#
-# Created by: PyQt5 UI code generator 5.11.3
-#
-# WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-#from PyQt5.QtWidgets import QLabel, QMainWindow, QApplication, QWidget, QGraphicsScene
 from PyQt5.QtGui import QPixmap
 import sys
 import numpy as np
@@ -45,13 +37,10 @@ class Ui_MainWindow(object):
         self.dockWidget = QtWidgets.QDockWidget(MainWindow)
         self.dockWidget.setObjectName("dockWidget")
         self.dockWidgetContents = QtWidgets.QWidget()
-        #self.dockWidgetContents.setGeometry(QtCore.QRect(200,10,200,641))
-        #self.dockWidget.setGeometry(QtCore.QRect(200,10,200,641))
         self.dockWidgetContents.setObjectName("dockWidgetContents")
         self.dockWidget_2 = QtWidgets.QDockWidget(MainWindow)
         self.dockWidget_2.setObjectName("dockWidget_2")
         self.dockWidget.setAllowedAreas(QtCore.Qt.RightDockWidgetArea)#|QtCore.Qt.RightDockWidgetArea)
-        #self.dockWidget_2.setGeometry(1,1,200,641)
         self.dockWidget2Contents = QtWidgets.QWidget()
         self.dockWidget2Contents.setObjectName("dockWidget2Contents")
         self.treeView = QtWidgets.QTreeView(self.dockWidget2Contents)
@@ -67,17 +56,26 @@ class Ui_MainWindow(object):
         self.verticalLayout = QtWidgets.QVBoxLayout(self.verticalLayoutWidget)
         self.verticalLayout.setContentsMargins(0, 0, 0, 0)
         self.verticalLayout.setObjectName("verticalLayout")
+        self.label_5 = QtWidgets.QLabel(self.verticalLayoutWidget)
+        self.label_5.setObjectName("label_5")
+        self.verticalLayout.addWidget(self.label_5)
         self.checkBox = QtWidgets.QCheckBox(self.verticalLayoutWidget)
         self.checkBox.setObjectName("checkBox")
         self.verticalLayout.addWidget(self.checkBox)
         self.checkBox_2 = QtWidgets.QCheckBox(self.verticalLayoutWidget)
         self.checkBox_2.setObjectName("checkBox_2")
         self.verticalLayout.addWidget(self.checkBox_2)
+        self.label_3 = QtWidgets.QLabel(self.verticalLayoutWidget)
+        self.label_3.setObjectName("label_3")
+        self.verticalLayout.addWidget(self.label_3)
         self.spinBox_2 = QtWidgets.QSpinBox(self.verticalLayoutWidget)
         self.spinBox_2.setObjectName("spinBox_2")
         self.spinBox_2.setMinimum(1)
-        self.spinBox_2.setValue(1)
+        self.spinBox_2.setValue(10)
         self.verticalLayout.addWidget(self.spinBox_2)
+        self.label_4 = QtWidgets.QLabel(self.verticalLayoutWidget)
+        self.label_4.setObjectName("label_4")
+        self.verticalLayout.addWidget(self.label_4)
         self.doubleSpinBox = QtWidgets.QDoubleSpinBox(self.verticalLayoutWidget)
         self.doubleSpinBox.setObjectName("doubleSpinBox")
         self.doubleSpinBox.setMinimum(1.00)
@@ -123,14 +121,8 @@ class Ui_MainWindow(object):
         exit_menu = self.menubar.addMenu('Info')
         
         self.retranslateUi(MainWindow)
-         
-        #self.pushButton_2.clicked.connect(self.picLabel.clear)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
-        
-        #pixmapp=QPixmap(pyImg)
-        #self.picLabel.move(0,0)
         self.picLabel.resize(MainWindow.width(), MainWindow.height())
-        #self.picLabel.setPixmap(pixmapp.scaled(MainWindow.width(),MainWindow.height()))
         
         self.pushButton_2.clicked.connect(self.cluster_img)
         self.spinBox.valueChanged.connect(self.valueChanged_k)
@@ -221,6 +213,9 @@ class Ui_MainWindow(object):
         self.checkBox.setText(_translate("MainWindow", "MAX_ITER"))
         self.checkBox_2.setText(_translate("MainWindow", "EPS"))
         self.label_2.setText(_translate("MainWindow", "ATTEMPTS"))
+        self.label_3.setText(_translate("MainWindow", "MAX_ITER"))
+        self.label_4.setText(_translate("MainWindow", "EPSILON"))
+        self.label_5.setText(_translate("MainWindow", "FLAGS"))
         self.label.setText(_translate("MainWindow", "k"))
         self.pushButton_2.setText(_translate("MainWindow", "UPDATE"))
         self.pushButton_3.setText(_translate("MainWindow", "RESET"))
